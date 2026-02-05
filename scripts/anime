@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# anime - Jikan API CLI for anime lookups
+# Usage: anime <command> [args]
+
+set -euo pipefail
+
+API="https://api.jikan.moe/v4"
+
+usage() {
+    cat <<EOF
+Usage: anime <command> [args]
+
+Commands:
+  search <query>    Search anime by title
+  info <id>         Get full anime details by MAL ID
+  season [year] [season]  Current or specified season (winter/spring/summer/fall)
+  top [limit]       Top anime (default: 10)
+  upcoming [limit]  Upcoming anime (default: 10)
+
+Examples:
+  anime search "one punch man"
+  anime info 30276
+  anime season
+  anime season 2024 fall
+  anime top 5
+EOF
+    exit 1
+}
+
+fetch() {
+    curl -sf "$1" || { echo "API error" >&2; exit 1; }
+}
+
+format_anime() {
+    jq -r '.data[] | "[\(.mal_id)] \(.title) — \(.episodes // "?") eps, \(.status), ⭐ \(.score // "N/A")"'
+}
+
+format_anime_full() {
+    jq -r '
+        .data | 
+        "🎬 \(.title)\n" +
+        (if .title_english and .title_english != .title then "   English: \(.title_english)\n" else "" end) +
+        "   MAL ID: \(.mal_id) | Score: \(.score // "N/A") | Rank: #\(.rank // "N/A")\n" +
+        "   Episodes: \(.episodes // "?") | Status: \(.status)\n" +
+        "   Aired: \(.aired.string // "TBA")\n" +
+        "   Genres: \([.genres[].name] | join(", "))\n" +
+        "   Studios: \([.studios[].name] | join(", "))\n" +
+        "\n📖 Synopsis:\n\(.synopsis // "No synopsis available.")\n" +
+        (if .trailer.url then "\n🎥 Trailer: \(.trailer.url)\n" else "" end)
+    '
+}
+
+cmd_search() {
+    [[ -z "${1:-}" ]] && { echo "Usage: anime search <query>" >&2; exit 1; }
+    fetch "$API/anime?q=$(printf '%s' "$1" | jq -sRr @uri)&limit=10&sfw=true" | format_anime
+}
+
+cmd_info() {
+    [[ -z "${1:-}" ]] && { echo "Usage: anime info <mal_id>" >&2; exit 1; }
+    fetch "$API/anime/$1/full" | format_anime_full
+}
+
+cmd_season() {
+    local year="${1:-}"
+    local season="${2:-}"
+    
+    if [[ -n "$year" && -n "$season" ]]; then
+        fetch "$API/seasons/$year/$season?limit=25" | format_anime
+    else
+        fetch "$API/seasons/now?limit=25" | format_anime
+    fi
+}
+
+cmd_top() {
+    local limit="${1:-10}"
+    fetch "$API/top/anime?limit=$limit" | format_anime
+}
+
+cmd_upcoming() {
+    local limit="${1:-10}"
+    fetch "$API/seasons/upcoming?limit=$limit" | format_anime
+}
+
+[[ $# -lt 1 ]] && usage
+
+case "$1" in
+    search)   shift; cmd_search "$@" ;;
+    info)     shift; cmd_info "$@" ;;
+    season)   shift; cmd_season "$@" ;;
+    top)      shift; cmd_top "$@" ;;
+    upcoming) shift; cmd_upcoming "$@" ;;
+    -h|--help|help) usage ;;
+    *) echo "Unknown command: $1" >&2; usage ;;
+esac
