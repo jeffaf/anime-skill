@@ -80,9 +80,11 @@ anime upcoming 5                  # Next 5 upcoming anime
 
 ## Agent Implementation Notes
 
+**Script location:** `{skill_folder}/anime` (symlink to `scripts/anime`)
+
 **When user asks about anime:**
-1. Use `anime search "title"` to find MAL ID
-2. Use `anime info <id>` for full details
-3. Use `anime season` or `anime top` for recommendations
+1. Run `./anime search "title"` to find MAL ID
+2. Run `./anime info <id>` for full details
+3. Run `./anime season` or `./anime top` for recommendations
 
 **Don't use for:** Non-anime media (manga, movies unless anime films).
