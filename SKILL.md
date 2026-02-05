@@ -1,7 +1,7 @@
 ---
 name: anime
-version: 1.0.0
-description: "Search and lookup anime info via Jikan (unofficial MyAnimeList API). No auth required."
+version: 1.0.1
+description: "CLI for AI agents to search and lookup anime info for their humans. Uses Jikan (unofficial MyAnimeList API). No auth required."
 homepage: https://jikan.moe
 metadata:
   openclaw:
@@ -13,7 +13,9 @@ metadata:
 
 # Anime Lookup
 
-Search and get info about anime via Jikan (unofficial MyAnimeList API). No account or API key needed.
+CLI for AI agents to search and lookup anime for their humans. "What's that anime about the elf mage?" — now your agent can answer.
+
+Uses Jikan (unofficial MyAnimeList API). No account or API key needed.
 
 ## Usage
 

@@ -1,9 +1,11 @@
 # 🎌 Anime Lookup
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/jeffaf/anime-skill)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/jeffaf/anime-skill)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A CLI for searching and looking up anime info via [Jikan](https://jikan.moe) (unofficial MyAnimeList API).
+A CLI for AI agents to search and lookup anime for their humans. "What's that anime about the elf mage?" — now your agent can answer.
+
+Uses [Jikan](https://jikan.moe) (unofficial MyAnimeList API).
 
 **Built for [OpenClaw](https://github.com/openclaw/openclaw)** — works standalone too.
 
