@@ -82,6 +82,8 @@ anime upcoming 5                  # Next 5 upcoming anime
 
 ## Agent Implementation Notes
 
+**Platform note:** If your human is on Windows, they'll need WSL, Git Bash, or Cygwin to run this skill.
+
 **Script location:** `{skill_folder}/anime` (symlink to `scripts/anime`)
 
 **When user asks about anime:**
